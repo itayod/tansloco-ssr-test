@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { TranslocoService } from '@ngneat/transloco';
+import { Observable, of } from 'rxjs';
 
 import { TranslatesService, ILang } from '@shared/translates';
 
@@ -8,17 +9,21 @@ import { TranslatesService, ILang } from '@shared/translates';
   templateUrl: './toolbar.component.html',
 })
 export class ToolbarComponent implements OnInit {
-  public langList$: Observable<ILang[]>;
+  public langList$: Observable<ILang[]> = of([
+    { code: 'en', name: 'English', culture: 'en-US' },
+    { code: 'es', name: 'Espanol', culture: 'ru-RU' },
+  ]);
   public currentLang: string;
 
-  constructor(private _translatesService: TranslatesService) {}
+  constructor(private _translatesService: TranslocoService) {}
 
   ngOnInit(): void {
-    this.langList$ = this._translatesService.getLangList();
-    this.currentLang = this._translatesService.getCurrentLang();
+    // this.langList$ = this._translatesService.getLangList();
+    // this.currentLang = this._translatesService.getCurrentLang();
   }
 
   public changeLang(code: string): void {
-    this._translatesService.changeLang(code);
+    console.log(code);
+    this._translatesService.setLangAndLoad(code);
   }
 }

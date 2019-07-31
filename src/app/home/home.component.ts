@@ -1,13 +1,14 @@
-import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID, InjectionToken } from '@angular/core';
 
 import { TransferHttpService } from '@gorniv/ngx-universal';
 import { MetaService } from '@ngx-meta/core';
 import { UniversalStorage } from '@shared/storage/universal.storage';
 import { DOCUMENT, isPlatformServer } from '@angular/common';
 
+
 @Component({
   selector: 'app-home',
-  templateUrl: './home.component.html',
+  templateUrl: './home.component.html'
 })
 export class HomeComponent implements OnInit {
   errorMessage: string;

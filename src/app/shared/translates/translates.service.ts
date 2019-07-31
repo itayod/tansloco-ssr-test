@@ -1,5 +1,6 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { DOCUMENT, isPlatformBrowser, isPlatformServer } from '@angular/common';
+import { TranslocoService } from '@ngneat/transloco';
 import { REQUEST } from '@nguniversal/express-engine/tokens';
 import {
   TranslateService as NGXTranslateService,
@@ -13,7 +14,7 @@ import { ILang } from './translates.interface';
 import { UniversalStorage } from '@shared/storage/universal.storage';
 
 const LANG_LIST: ILang[] = [
-  { code: 'ru', name: 'Русский', culture: 'ru-RU' },
+  { code: 'es', name: 'Espanol', culture: 'es-ES' },
   { code: 'en', name: 'English', culture: 'en-US' },
 ];
 const LANG_DEFAULT: ILang = LANG_LIST[0];
@@ -25,7 +26,7 @@ export class TranslatesService {
     @Inject(PLATFORM_ID) private _platformId: Object,
     @Inject(DOCUMENT) private _document: any,
     @Inject(REQUEST) private _request: any,
-    @Inject(NGXTranslateService) private _translate: NGXTranslateService,
+    @Inject(NGXTranslateService) private _translate: TranslocoService,
     @Inject(MetaService) private _meta: MetaService,
     @Inject(REQUEST) private _req: any,
     @Inject(UniversalStorage) private _appStorage: Storage,
@@ -33,15 +34,15 @@ export class TranslatesService {
 
   public initLanguage(): Promise<any> {
     return new Promise((resolve: Function) => {
-      this._translate.addLangs(LANG_LIST.map((lang: ILang) => lang.code));
+      // this._translate.addLangs(LANG_LIST.map((lang: ILang) => lang.code));
       const language: ILang = this._getLanguage();
       if (language) {
         this._translate.setDefaultLang(language.code);
       } else {
         this._translate.setDefaultLang(LANG_DEFAULT.code);
       }
-      this._setLanguage(language);
-      resolve();
+      // this._setLanguage(language);
+      resolve(language);
     });
   }
 
@@ -76,19 +77,20 @@ export class TranslatesService {
   }
 
   private _setLanguage(lang: ILang): void {
-    this._translate.use(lang.code).subscribe(() => {
-      this._meta.setTag('og:locale', lang.culture);
-      this._document.documentElement.lang = lang.code;
-    });
+    // this._translate.use(lang.code).subscribe(() => {
+    //   this._meta.setTag('og:locale', lang.culture);
+    //   this._document.documentElement.lang = lang.code;
+    // });
   }
 
   public changeLang(code: string): void {
-    const lang: ILang = this._getFindLang(code);
-    if (!lang || lang.code === this._translate.currentLang) {
-      return;
-    }
-    this._appStorage.setItem(STORAGE_LANG_NAME, lang.code);
-    this._setLanguage(lang);
+    this._translate.setActiveLang(code);
+    // const lang: ILang = this._getFindLang(code);
+    // if (!lang || lang.code === this._translate.currentLang) {
+    //   return;
+    // }
+    // this._appStorage.setItem(STORAGE_LANG_NAME, lang.code);
+    // this._setLanguage(lang);
   }
 
   public getLangList(): Observable<ILang[]> {
@@ -96,7 +98,8 @@ export class TranslatesService {
   }
 
   public getCurrentLang(): string {
-    return this._translate.currentLang;
+    return 'en';
+    // return this._translate.currentLang;
   }
 }
 
